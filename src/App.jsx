@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 import './styles.css'
 export default function App() {
   const [filter, setFilter] = useState({
@@ -6,6 +6,7 @@ export default function App() {
     contrast: 1,
     saturation: 1,
   })
+  const inputRef=useRef(null)
 
   /* Challenge
 
@@ -20,6 +21,19 @@ export default function App() {
 		   
 		4. Kodunuzu mümkün olduğunca DRY yapmaya çalışın
 */
+const onPointerMove=(e)=>{
+  setFilter(prevent=>({
+    ...prevent,[e.target.name]:e.target.value,
+  }))
+}
+const updateFilter=()=>{
+  if(inputRef.current){
+    inputRef.current.style.setProperty('--brightness', filter.brightness);
+    inputRef.current.style.setProperty('--contrast', filter.contrast);
+    inputRef.current.style.setProperty('--saturation', filter.saturation);
+  }
+
+}
 
   return (
     <div className='main-container'>
@@ -28,22 +42,22 @@ export default function App() {
       </h1>
 
       <div className='image-container'>
-        <img src='./images/kunal-goswami-CuUn__aMGD4-unsplash.jpg' />
+        <img src='./images/kunal-goswami-CuUn__aMGD4-unsplash.jpg' ref={inputRef} />
       </div>
 
       <form>
         <label>
-          <input type='range' name='brightness' min={0} max={2} step={0.1} />
+          <input onChange={onPointerMove} onInput={updateFilter} type='range' name='brightness' min={0} max={2} step={0.1} />
           <span>Brightness</span>
         </label>
 
         <label>
-          <input type='range' name='contrast' min={0} max={2} step={0.1} />
+          <input onChange={onPointerMove} onInput={updateFilter} type='range' name='contrast' min={0} max={2} step={0.1} />
           <span>Contrast</span>
         </label>
 
         <label>
-          <input type='range' name='saturation' min={0} max={2} step={0.1} />
+          <input onChange={onPointerMove} onInput={updateFilter} type='range' name='saturation' min={0} max={2} step={0.1} />
           <span>Saturation</span>
         </label>
       </form>
